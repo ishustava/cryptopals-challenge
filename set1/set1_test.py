@@ -3,10 +3,11 @@ from set1 import to_base64
 from set1 import xor
 from set1 import detect_single_char_XOR_cipher_from_string
 from set1 import encrypt_with_repeating_xor_key
+from set1 import hamming_distance
 
 class TestCryptoPalsSet1(unittest.TestCase):
      def error_message(self, expected, actual):
-         return "\nExpected: " + expected + ", but got: " + actual
+         return "\nExpected: " + str(expected) + ", but got: " + str(actual)
 
      # #1
      def test_base_64(self):
@@ -68,6 +69,11 @@ class TestCryptoPalsSet1(unittest.TestCase):
           self.assertEqual(result,
                            expected_ciphertext,
                            "Wrong repeating xor key result." + self.error_message(expected_ciphertext, result))
+
+     # #6
+     def test_hamming_distance(self):
+          distance = hamming_distance('this is a test', 'wokka wokka!!!')
+          self.assertEqual(distance, 37, "Wrong hamming distance." + self.error_message(37, distance))
 
 if __name__ == '__main__':
      unittest.main()

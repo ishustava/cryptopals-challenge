@@ -41,3 +41,7 @@ def detect_single_char_XOR_cipher_from_string(hex_string):
 
 def encrypt_with_repeating_xor_key(key, plaintext):
      return xor(ascii_to_hex(plaintext), create_multiple_char_cipher(key, len(plaintext)))
+
+def hamming_distance(text1, text2):
+     binary_xor_result = '{0:b}'.format(int(xor(ascii_to_hex(text1), ascii_to_hex(text2)), 16))
+     return len(filter(lambda b: b == '1', binary_xor_result))
