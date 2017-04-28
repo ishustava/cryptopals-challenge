@@ -1,5 +1,5 @@
 import unittest
-from set1 import to_base64
+from set1 import base64_encode
 from set1 import xor
 from set1 import detect_single_char_XOR_cipher_from_string
 from set1 import encrypt_with_repeating_xor_key
@@ -10,14 +10,14 @@ class TestCryptoPalsSet1(unittest.TestCase):
          return "\nExpected: " + str(expected) + ", but got: " + str(actual)
 
      # #1
-     def test_base_64(self):
-          base64_result = to_base64("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d")
+     def test_base64_encode(self):
+          base64_result = base64_encode("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d")
           expected_result = 'SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t'
           self.assertEqual(base64_result,
                            expected_result,
                            "Wrong encoded base64 result." + self.error_message(expected_result, base64_result))
 
-          base64_result = to_base64("abcd")
+          base64_result = base64_encode("abcd")
           expected_result = 'q80'
           self.assertEqual(base64_result,
                            expected_result,

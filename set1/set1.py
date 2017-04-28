@@ -6,7 +6,7 @@ MOST_FREQUENT_ENGLLISH_CHARS = "ETAOIN SHRDLU"
 def hex_string_to_binary(hex_string):
      return bin(int(hex_string, 16))[2:].zfill(len(hex_string) * 4)
 
-def to_base64(hex_string):
+def base64_encode(hex_string):
      binary = hex_string_to_binary(hex_string)
      base64_chunks = [binary[i:i+6] for i in range(0, len(binary), 6)]
      padding = lambda bits: '0' * (6 - len(bits))
