@@ -1,3 +1,4 @@
+from __future__ import division
 
 CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 ENGLISH_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 "
@@ -33,7 +34,7 @@ def create_multiple_char_cipher(chars, length):
      return ''.join('{0:02x}'.format(ord(chars[i % len(chars)])) for i in range(length))
 
 def detect_single_char_XOR_cipher_from_string(hex_string):
-     possible_ciphers = [create_single_char_cipher(char, len(hex_string)/2) for char in ENGLISH_CHARS]
+     possible_ciphers = [create_single_char_cipher(char, len(hex_string)//2) for char in ENGLISH_CHARS]
      scores = {score_text(hex_to_ascii(xor(hex_string, cipher))): cipher for cipher in possible_ciphers}
      probable_cipher = scores[max(scores)]
      plaintext = hex_to_ascii(xor(hex_string, probable_cipher))
@@ -43,5 +44,10 @@ def encrypt_with_repeating_xor_key(key, plaintext):
      return xor(ascii_to_hex(plaintext), create_multiple_char_cipher(key, len(plaintext)))
 
 def hamming_distance(text1, text2):
-     binary_xor_result = '{0:b}'.format(int(xor(ascii_to_hex(text1), ascii_to_hex(text2)), 16))
+     binary_xor_result = '{0:b}'.format(int(xor(text1, text2), 16))
      return len(filter(lambda b: b == '1', binary_xor_result))
+
+def detect_key_size(text):
+     possible_key_sizes = range(4, 81)
+     normalized_hamming_distances = {hamming_distance(text[:k], text[k:2*k]): k for k in possible_key_sizes if len(text) > 2 * k}
+     return normalized_hamming_distances[min(normalized_hamming_distances)]

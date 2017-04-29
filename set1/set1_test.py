@@ -4,6 +4,8 @@ from set1 import xor
 from set1 import detect_single_char_XOR_cipher_from_string
 from set1 import encrypt_with_repeating_xor_key
 from set1 import hamming_distance
+from set1 import detect_key_size
+from set1 import ascii_to_hex
 
 class TestCryptoPalsSet1(unittest.TestCase):
      def error_message(self, expected, actual):
@@ -72,8 +74,13 @@ class TestCryptoPalsSet1(unittest.TestCase):
 
      # #6
      def test_hamming_distance(self):
-          distance = hamming_distance('this is a test', 'wokka wokka!!!')
+          distance = hamming_distance(ascii_to_hex('this is a test'), ascii_to_hex('wokka wokka!!!'))
           self.assertEqual(distance, 37, "Wrong hamming distance." + self.error_message(37, distance))
+
+     def test_detect_key_size(self):
+          ciphertext = encrypt_with_repeating_xor_key('test', 'this is a test')
+          detected_key_size = detect_key_size(ciphertext)
+          self.assertEqual(detected_key_size, len('test'))
 
 if __name__ == '__main__':
      unittest.main()
