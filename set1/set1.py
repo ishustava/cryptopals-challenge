@@ -13,6 +13,12 @@ def base64_encode(hex_string):
      padding = lambda bits: '0' * (6 - len(bits))
      return ''.join(CODES[int(bits + padding(bits), 2)] for bits in base64_chunks)
 
+def base64_decode(base64_string):
+     binary = ''.join('{0:06b}'.format(CODES.index(c)) for c in base64_string)
+     num_trailing_zeros = len(binary) % 4
+     binary = binary[:len(binary) - num_trailing_zeros]
+     return '{0:x}'.format((int(binary, 2)))
+
 def xor(buffer1, buffer2):
      return '{0:x}'.format((int(buffer1, 16) ^ int(buffer2, 16)))
 

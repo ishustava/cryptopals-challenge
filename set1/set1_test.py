@@ -1,5 +1,6 @@
 import unittest
 from set1 import base64_encode
+from set1 import base64_decode
 from set1 import xor
 from set1 import detect_single_char_XOR_cipher_from_string
 from set1 import encrypt_with_repeating_xor_key
@@ -81,6 +82,19 @@ class TestCryptoPalsSet1(unittest.TestCase):
           ciphertext = encrypt_with_repeating_xor_key('test', 'this is a test')
           detected_key_size = detect_key_size(ciphertext)
           self.assertEqual(detected_key_size, len('test'))
+
+     def test_base64_decode(self):
+          hex_result = base64_decode('SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t')
+          expected_result = '49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d'
+          self.assertEqual(hex_result,
+                           expected_result,
+                           "Wrong decoded base64 result." + self.error_message(expected_result, hex_result))
+
+          hex_result = base64_decode('q80')
+          expected_result = 'abcd'
+          self.assertEqual(hex_result,
+                           expected_result,
+                           "Wrong decoded base64 result." + self.error_message(expected_result, hex_result))
 
 if __name__ == '__main__':
      unittest.main()
