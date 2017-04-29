@@ -2,7 +2,7 @@ from __future__ import division
 
 CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 ENGLISH_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 "
-MOST_FREQUENT_ENGLLISH_CHARS = "ETAOIN SHRDLU"
+MOST_FREQUENT_ENGLISH_CHARS = "ETAOIN SHRDLU"
 
 def hex_string_to_binary(hex_string):
      return bin(int(hex_string, 16))[2:].zfill(len(hex_string) * 4)
@@ -24,7 +24,7 @@ def ascii_to_hex(ascii_string):
 
 def score_text(text):
      text = text.upper()
-     frequencies = {c: text.count(c) for c in MOST_FREQUENT_ENGLLISH_CHARS}
+     frequencies = {c: text.count(c) for c in MOST_FREQUENT_ENGLISH_CHARS}
      return sum(frequencies.values())
 
 def create_single_char_cipher(char, length):
