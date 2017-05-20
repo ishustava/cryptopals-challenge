@@ -79,9 +79,9 @@ class TestCryptoPalsSet1(unittest.TestCase):
           self.assertEqual(distance, 37, "Wrong hamming distance." + self.error_message(37, distance))
 
      def test_detect_key_size(self):
-          ciphertext = encrypt_with_repeating_xor_key('test', 'this is a test')
+          ciphertext = encrypt_with_repeating_xor_key('ice', 'this is a test')
           detected_key_size = detect_key_size(ciphertext)
-          self.assertEqual(detected_key_size, len('test'))
+          self.assertEqual(detected_key_size, len('ice'))
 
      def test_base64_decode(self):
           hex_result = base64_decode('SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t')

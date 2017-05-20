@@ -53,7 +53,7 @@ def hamming_distance(text1, text2):
      binary_xor_result = '{0:b}'.format(int(xor(text1, text2), 16))
      return len(filter(lambda b: b == '1', binary_xor_result))
 
-def detect_key_size(text):
-     possible_key_sizes = range(4, 81)
-     normalized_hamming_distances = {hamming_distance(text[:k], text[k:2*k]): k for k in possible_key_sizes if len(text) > 2 * k}
+def detect_key_size(text_in_hex):
+     possible_key_sizes = range(2, 41)
+     normalized_hamming_distances = {hamming_distance(text_in_hex[:2*k], text_in_hex[2*k:4*k])/k: k for k in possible_key_sizes if len(text_in_hex) > 4 * k}
      return normalized_hamming_distances[min(normalized_hamming_distances)]
