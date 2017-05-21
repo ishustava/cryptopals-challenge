@@ -8,6 +8,7 @@ from set1 import hamming_distance
 from set1 import detect_key_size
 from set1 import ascii_to_hex
 from set1 import break_repeating_key_xor
+import random
 
 class TestCryptoPalsSet1(unittest.TestCase):
      def error_message(self, expected, actual):
@@ -87,14 +88,18 @@ Therefore I have entreated him along
 With us to watch the minutes of this night;
 That if again this apparition come,
 He may approve our eyes and speak to it."""
-          ciphertext = encrypt_with_repeating_xor_key('goose', plaintext)
-          detected_key_size = detect_key_size(ciphertext)
-          self.assertEqual(detected_key_size, len('goose'))
 
-          # This test doesn't pass with the hamming distance heuristic
-          # ciphertext = encrypt_with_repeating_xor_key('rubber', plaintext)
-          # detected_key_size = detect_key_size(ciphertext)
-          # self.assertEqual(detected_key_size, len('rubber'))
+          chars = 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz'
+          num_successful_detections = 0
+          for k in range(2, 40):
+               key = ''.join(random.sample(chars, k))
+               print "key: ", key, " for size: ", k
+               ciphertext = encrypt_with_repeating_xor_key(key, plaintext)
+               detected_key_size = detect_key_size(ciphertext)
+               print "detected key size:", detected_key_size
+               if detected_key_size == k:
+                    num_successful_detections += 1
+          print "number of successfull detections:", num_successful_detections, num_successful_detections/38.0 * 100
 
      def test_base64_decode(self):
           hex_result = base64_decode('SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t')

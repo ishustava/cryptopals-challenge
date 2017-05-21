@@ -1,4 +1,5 @@
 from __future__ import division
+import itertools
 
 CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 ENGLISH_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 "
@@ -57,14 +58,12 @@ def detect_key_size(text_in_hex):
      possible_key_sizes = range(2, 41)
      normalized_hamming_distances = {}
      for k in possible_key_sizes:
-          chunks = [text_in_hex[i:i+2*k] for i in range(0, 8*k, 2*k)]
-          dist1 = hamming_distance(chunks[0], chunks[1])/k
-          dist2 = hamming_distance(chunks[2], chunks[3])/k
-          dist3 = hamming_distance(chunks[0], chunks[2])/k
-          dist4 = hamming_distance(chunks[0], chunks[3])/k
-          # dist5 = hamming_distance(chunks[1], chunks[2])/k
-          # dist6 = hamming_distance(chunks[1], chunks[3])/k
-          normalized_hamming_distances[k] = (dist1 + dist2 + dist3 + dist4) / 4
+          chunks = [text_in_hex[i:i+2*k] for i in range(0, 14*k, 2*k)]
+          combinations_chunks = itertools.combinations(chunks[:10], 2)
+          sum_hamming_distance = 0
+          for c in combinations_chunks:
+               sum_hamming_distance += hamming_distance(c[0], c[1])/k
+          normalized_hamming_distances[k] = sum_hamming_distance / 36
      return min(normalized_hamming_distances, key=normalized_hamming_distances.get)
 
 def break_repeating_key_xor(base64_encoded_text):
