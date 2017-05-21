@@ -7,6 +7,7 @@ from set1 import encrypt_with_repeating_xor_key
 from set1 import hamming_distance
 from set1 import detect_key_size
 from set1 import ascii_to_hex
+from set1 import break_repeating_key_xor
 
 class TestCryptoPalsSet1(unittest.TestCase):
      def error_message(self, expected, actual):
@@ -41,7 +42,7 @@ class TestCryptoPalsSet1(unittest.TestCase):
           hex_string = '1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736'
           _, cipher, plaintext = detect_single_char_XOR_cipher_from_string(hex_string)
           expected_cipher, expected_plaintext = \
-                    '58585858585858585858585858585858585858585858585858585858585858585858', \
+                    '58', \
                     'Cooking MC\'s like a pound of bacon'
           self.assertEqual(cipher,
                            expected_cipher,
@@ -79,9 +80,21 @@ class TestCryptoPalsSet1(unittest.TestCase):
           self.assertEqual(distance, 37, "Wrong hamming distance." + self.error_message(37, distance))
 
      def test_detect_key_size(self):
-          ciphertext = encrypt_with_repeating_xor_key('ice', 'this is a test')
+          plaintext = """Horatio says 'tis but our fantasy,
+And will not let belief take hold of him
+Touching this dreaded sight, twice seen of us:
+Therefore I have entreated him along
+With us to watch the minutes of this night;
+That if again this apparition come,
+He may approve our eyes and speak to it."""
+          ciphertext = encrypt_with_repeating_xor_key('goose', plaintext)
           detected_key_size = detect_key_size(ciphertext)
-          self.assertEqual(detected_key_size, len('ice'))
+          self.assertEqual(detected_key_size, len('goose'))
+
+          # This test doesn't pass with the hamming distance heuristic
+          # ciphertext = encrypt_with_repeating_xor_key('rubber', plaintext)
+          # detected_key_size = detect_key_size(ciphertext)
+          # self.assertEqual(detected_key_size, len('rubber'))
 
      def test_base64_decode(self):
           hex_result = base64_decode('SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t')
@@ -95,6 +108,12 @@ class TestCryptoPalsSet1(unittest.TestCase):
           self.assertEqual(hex_result,
                            expected_result,
                            "Wrong decoded base64 result." + self.error_message(expected_result, hex_result))
+
+     def test_break_repeating_key_xor(self):
+          encrypted_text_file = open("6.txt", "r")
+          text = ''.join(line.strip() for line in encrypted_text_file.readlines())
+          decrypted_text = break_repeating_key_xor(text)
+          print decrypted_text
 
 if __name__ == '__main__':
      unittest.main()

@@ -44,7 +44,7 @@ def detect_single_char_XOR_cipher_from_string(hex_string):
      scores = {score_text(hex_to_ascii(xor(hex_string, cipher))): cipher for cipher in possible_ciphers}
      probable_cipher = scores[max(scores)]
      plaintext = hex_to_ascii(xor(hex_string, probable_cipher))
-     return max(scores), probable_cipher, plaintext
+     return max(scores), probable_cipher[:2], plaintext
 
 def encrypt_with_repeating_xor_key(key, plaintext):
      return xor(ascii_to_hex(plaintext), create_multiple_char_cipher(key, len(plaintext)))
@@ -55,5 +55,24 @@ def hamming_distance(text1, text2):
 
 def detect_key_size(text_in_hex):
      possible_key_sizes = range(2, 41)
-     normalized_hamming_distances = {hamming_distance(text_in_hex[:2*k], text_in_hex[2*k:4*k])/k: k for k in possible_key_sizes if len(text_in_hex) > 4 * k}
-     return normalized_hamming_distances[min(normalized_hamming_distances)]
+     normalized_hamming_distances = {}
+     for k in possible_key_sizes:
+          chunks = [text_in_hex[i:i+2*k] for i in range(0, 8*k, 2*k)]
+          dist1 = hamming_distance(chunks[0], chunks[1])/k
+          dist2 = hamming_distance(chunks[2], chunks[3])/k
+          dist3 = hamming_distance(chunks[0], chunks[2])/k
+          dist4 = hamming_distance(chunks[0], chunks[3])/k
+          # dist5 = hamming_distance(chunks[1], chunks[2])/k
+          # dist6 = hamming_distance(chunks[1], chunks[3])/k
+          normalized_hamming_distances[k] = (dist1 + dist2 + dist3 + dist4) / 4
+     return min(normalized_hamming_distances, key=normalized_hamming_distances.get)
+
+def break_repeating_key_xor(base64_encoded_text):
+     decoded_text = base64_decode(base64_encoded_text.replace('=', ''))
+     probable_key_size = detect_key_size(decoded_text)
+     single_chars = [decoded_text[i:i+2] for i in range(0, len(decoded_text)-1, 2)]
+     single_char_blocks = [single_chars[i::probable_key_size] for i in range(probable_key_size)]
+     key_decrypted_text_pairs = [detect_single_char_XOR_cipher_from_string(''.join(s)) for s in single_char_blocks]
+     decrypted_text_single_char_blocks = [x[2] for x in key_decrypted_text_pairs]
+     return ''.join([''.join(x[i] for x in decrypted_text_single_char_blocks) for i in range(probable_key_size)])
+
